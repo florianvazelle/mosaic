@@ -1,0 +1,14 @@
+[requires]
+sdl2/2.0.10@bincrafters/stable
+sdl2_image/2.0.5@bincrafters/stable
+
+[options]
+SDL2:shared=True
+SDL2_image:shared=False
+
+[generators]
+cmake
+
+[imports]
+bin, *.dll -> ./bin # Copies all dll files from packages bin folder to my "bin" folder
+lib, *.dylib* -> ./bin # Copies all dylib files from packages lib folder to my "bin" folder
