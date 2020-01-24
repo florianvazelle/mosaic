@@ -1,36 +1,56 @@
 * A starting point for C++ projects using SDL2.
 * Uses conan.io[https://conan.io] to obtain and setup libraries.
+```sh
+pip3 install conan
+```
 * Uses CMake[https://cmake.org] for build system creation.
 
 ## Quickstart
 
-Windows:: `auto.bat` #or double-click
-Linux:: `./auto.sh`
+Windows : `auto.bat` # or double-click
+
+Linux : `./auto.sh`
 
 ## Manual start
 
-From a command line, at the root of this project
+From a command line, at the root of this project.
 
-1. Make a directory for temporary build files
-  * `mkdir build`
-2. Change into that directory
-  * `cd build`
-3. Ask conan to install libraries, according to `conanfile.txt`
-  * `conan install .. --build missing`
-4. Ask CMake to make a build system (build files will be in `build` folder. `.sln` file for Visual Studio)
+Make a directory for temporary build files.
+
+```sh
+mkdir build
+```
+
+Change into that directory
+```sh
+cd build
+```
+Ask conan to install libraries, according to `conanfile.txt`
+```sh
+conan install .. --build missing
+```
+
+Ask CMake to make a build system (build files will be in `build` folder. `.sln` file for Visual Studio)
   * Windows
-    - `cmake .. -G "Visual Studio 14 2015 Win64"`
+```sh
+cmake .. -G "Visual Studio 14 2015 Win64"
+```
   * Linux
-    - `cmake .. -G "Unix Makefiles`
+```sh
+cmake .. -G "Unix Makefiles
+```
   * Any (auto select build system)
-    - `cmake ..`
-5. Do the build
+```sh
+cmake ..
+```
+
+Do the build
   - Visual Studio, manually
-    - open the `.sln` file and hit *build*
+    - open the directory and hit *build*
   - Ask CMake to ask the build system to build (OPTIONAL)
-    - `cmake --build . --config Debug`
-6. Return to parent directory
-  * `cd ..`
+```sh
+cmake --build . --config Debug
+```
 
 ## Other resources
 
