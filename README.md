@@ -1,9 +1,9 @@
 * A starting point for C++ projects using SDL2.
-* Uses conan.io[https://conan.io] to obtain and setup libraries.
+* Uses [conan.io](https://conan.io) to obtain and setup libraries.
 ```sh
 pip3 install conan
 ```
-* Uses CMake[https://cmake.org] for build system creation.
+* Uses [CMake](https://cmake.org) for build system creation.
 
 ## Quickstart
 
