@@ -1,10 +1,7 @@
 project("mosaic")
 cmake_minimum_required(VERSION 3.0)
 
-# CMAKE_CXX_STANDARD introduced in v3.1.3
-set(CMAKE_CXX_STANDARD          11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS        OFF)
+set(CMAKE_CXX_STANDARD 17)
 set_property(DIRECTORY PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
 
 include(${PROJECT_SOURCE_DIR}/build/conanbuildinfo.cmake)
