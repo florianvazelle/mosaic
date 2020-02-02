@@ -1,6 +1,8 @@
 #include "FormUtilities.h"
 
 #include <string>
+#include <algorithm>
+#include <cctype>
 
 void form(const std::string& question, std::string& answer, const std::string& default_answer, std::function<bool(const std::string&)> const& check) {
     do {
