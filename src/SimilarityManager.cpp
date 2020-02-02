@@ -5,8 +5,6 @@
 #include "SimilarityManager.h"
 
 int SimilarityManager::diffHisto(const Histogram& main_histo, const std::vector<Histogram>& list_histo) {
-    std::cout << "Execute : diffHisto" << std::endl;
-
     int idx_bin = -1;
     float max_distance = std::numeric_limits<float>::infinity();
 

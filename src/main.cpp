@@ -4,12 +4,22 @@
 #include <cassert>
 #include <filesystem>
 
+#include <stdio.h>
+
 #include "Image.h"
 #include "FormUtilities.h"
 #include "ResizeManager.h"
 #include "SimilarityManager.h"
 
 namespace fs = std::filesystem;
+
+int idx = 0;
+/* For debug */
+void debug_image(const Image& i) {
+    char buff[50];
+    sprintf(buff, "../../assets/tmp%d.png", idx++);
+    i.save_png(buff);
+}
 
 /* Retourne la liste d'image contenu dans le repertoire passer en parametre */
 void getFilesInDirectory(std::vector<Image>& out, const std::string& directory) {
@@ -19,7 +29,7 @@ void getFilesInDirectory(std::vector<Image>& out, const std::string& directory) 
         fs::path ext = path.extension();
 
         // On ne selectionne que les image PNG
-        if (ext == ".png") {
+        if (ext == ".png" || ext == ".jpg" || ext == ".bmp") {
             std::string path_str = path.string();
 
             // Au cas ou l'image provoque une erreur
@@ -31,7 +41,7 @@ void getFilesInDirectory(std::vector<Image>& out, const std::string& directory) 
                 std::cerr << "Type " << typeid(e).name() << std::endl;
             }
 
-            if (out.size() >= 50) break;
+            // if (out.size() >= 15) break;
         }
 
     }
@@ -42,37 +52,28 @@ void mosaic(Image& image, int R, int C, std::vector<Image> set, ResizeManager rm
     // Step 1 - Découpe de l'image en plusieurs vignettes
     std::vector<Image> vignettes;
 
-    int x = 0;
-    int y = 0;
     int w = image.w() / C;
     int h = image.h() / R;
     int s = R * C;
 
     for (int i = 0; i < R; i++) {
         for (int j = 0; j < C; j++) {
-            vignettes.push_back(Image(image, x, y, w, h));
-            y += h;
+            Image tmp(image, j * w, i * h, w, h);
+            vignettes.push_back(tmp);
         }
-        x += w;
-        y = 0;
     }
-    
-    assert(vignettes.size() == R * C);
+
+    assert(vignettes.size() == (size_t)s);
 
     // Step 2 - Mise a la resolution, l'ensemble des images du set
     // et calcul des histogrammes
     std::vector<Histogram> list_histo_set;
-    int i = 0;
+ 
+    int k = 0;
     for (Image& im : set) {
         rm.resize(im, w, h);
         Histogram out = im.histo();
         list_histo_set.push_back(out);
-        
-        //tmp
-        std::string s = std::to_string(i);
-        char const* pchar = s.c_str();
-        im.save_png("../../assets/tmp.png");
-        i++;
     }
 
     // Step 3 - Pour chaque vignette on determine quelle image du set est la plus ressemblante
@@ -94,11 +95,11 @@ void mosaic(Image& image, int R, int C, std::vector<Image> set, ResizeManager rm
 
 int main() {
     // Demande a l'utilisateur les valeurs en entree
-    std::string pathI; form("Path of I", pathI, "./assets/wiki.png", file_exist);
+    std::string pathI; form("Path of I", pathI, "./assets/test.png", file_exist);
     std::string pathD; form("Directory with a set", pathD, "./assets/set", directory_exist);
-    std::string row; form("Number of row", row, "2", is_number);
-    std::string col; form("Number of col", col, "2", is_number);
-    std::string funcResize; form("Methods for resize NormalCrop/CenterCrop", funcResize, "NormalCrop", resize_function_exist);
+    std::string row; form("Number of row", row, "20", is_number);
+    std::string col; form("Number of col", col, "20", is_number);
+    std::string funcResize; form("Methods for resize NormalCrop/CenterCrop", funcResize, "CenterCrop", resize_function_exist);
     std::string funcSim; form("Methods for similarity diffHisto", funcSim, "diffHisto", similarity_function_exist);
 
     // Creation de l'image principale
@@ -114,8 +115,8 @@ int main() {
     int R = std::stoi(row);
     int C = std::stoi(col);
 
-    ResizeManager rm(funcResize.c_str());
-    SimilarityManager sm(funcSim.c_str());
+    ResizeManager rm(funcResize);
+    SimilarityManager sm(funcSim);
 
     // Application du filtre mosaique
     mosaic(image, R, C, set, rm, sm);

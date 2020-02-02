@@ -18,7 +18,7 @@ public:
     auto operator[](int r) { return _pixels.data() + r * w(); }
     auto operator[](int r) const { return _pixels.data() + r * w(); }
 
-    void save_png(char const* filename);
+    void save_png(char const* filename) const;
     auto pixels() { return _pixels.data(); }
     auto pixels() const { return _pixels.data(); }
     int w() const { return _w; }

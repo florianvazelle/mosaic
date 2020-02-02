@@ -8,7 +8,7 @@ class SimilarityManager {
 public:
 
     SimilarityManager() { _sim = &SimilarityManager::diffHisto; };
-    SimilarityManager(const char* funcName) {
+    SimilarityManager(const std::string& funcName) {
         if (funcName == "diffHisto") {
             _sim = &SimilarityManager::diffHisto;
         } else {

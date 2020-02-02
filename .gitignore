@@ -1,6 +1,7 @@
 /.project
 /.vs
 /assets/set
+/assets/tmp*
 
 ## Generated documentation
 

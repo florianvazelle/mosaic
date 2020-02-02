@@ -5,8 +5,6 @@
 #include <stdexcept>
 
 Image::Image(char const* filename) {
-    std::cout << "Construct Image : " << filename << std::endl;
-
     SDL_Surface* surface = IMG_Load(filename);
     if (surface) {
         _h = surface->h;
@@ -62,7 +60,7 @@ Image::Image(const std::vector<Image>& list_im, int row, int col) {
     int idx = 0;
     for (int i = 0; i < row; i++) {
         for (int j = 0; j < col; j++) {
-            const Image& tmp = list_im[i + j];
+            const Image& tmp = list_im[(i * col) + j];
             for (int l = 0; l < height; ++l) {
                 auto row = tmp[l];
                 idx = i * (height * _w) + j * width + l * _w;
@@ -72,7 +70,7 @@ Image::Image(const std::vector<Image>& list_im, int row, int col) {
     }
 }
 
-void Image::save_png(char const* filename) {
+void Image::save_png(char const* filename) const {
     SDL_Surface* out_surface;
     out_surface = SDL_CreateRGBSurface(0, _w, _h, 32, 0, 0, 0, 0);
     out_surface = SDL_ConvertSurfaceFormat(out_surface, SDL_PIXELFORMAT_RGBA8888, 0);

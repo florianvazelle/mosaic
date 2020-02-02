@@ -7,7 +7,7 @@ class ResizeManager {
 public:
 
     ResizeManager() { _resize = &ResizeManager::NormalCrop; };
-    ResizeManager(const char* funcName) { 
+    ResizeManager(const std::string& funcName) { 
         if (funcName == "NormalCrop") {
             _resize = &ResizeManager::NormalCrop;
         } else if (funcName == "CenterCrop") {

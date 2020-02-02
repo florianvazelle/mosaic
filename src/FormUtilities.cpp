@@ -4,7 +4,7 @@
 
 void form(const std::string& question, std::string& answer, const std::string& default_answer, std::function<bool(const std::string&)> const& check) {
     do {
-        std::cout << question << "(default is \"" << default_answer << "\"): ";
+        std::cout << question << " (default is \"" << default_answer << "\"): ";
         std::getline(std::cin, answer);
         if (answer.size() == 0) {
             answer = default_answer;
