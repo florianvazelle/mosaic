@@ -13,16 +13,17 @@ public:
         } else if (funcName == "CenterCrop") {
             _resize = &ResizeManager::CenterCrop;
         } else {
+            // Valeur par defaut
             _resize = &ResizeManager::NormalCrop;
         }
     };
     
-    void resize(Image& im, int w, int h) { (this->*_resize)(im, w, h); };
-    void NormalCrop(Image& im, int w, int h);
-    void CenterCrop(Image& im, int w, int h);
+    void resize(Image& im, int w, int h) const { (this->*_resize)(im, w, h); };
+    void NormalCrop(Image& im, int w, int h) const;
+    void CenterCrop(Image& im, int w, int h) const;
 
 private:
-    void (ResizeManager::*_resize)(Image&, int, int);
+    void (ResizeManager::*_resize)(Image&, int, int) const;
 };
 
 #endif

@@ -9,7 +9,7 @@ Image::Image(char const* filename) {
     if (surface) {
         _h = surface->h;
         _w = surface->w;
-        _pixels.resize((size_t)_h * _w);
+        _pixels.resize(_h * _w);
 
         SDL_Surface* in_surface = SDL_ConvertSurfaceFormat(surface, SDL_PIXELFORMAT_RGBA8888, 0);
         SDL_FreeSurface(surface);

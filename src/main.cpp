@@ -1,10 +1,10 @@
 ﻿#include <iostream>
 #include <string>
 #include <vector>
-#include <cassert>
 #include <filesystem>
-
-#include <stdio.h>
+#include <cassert>
+#include <ctime>
+#include <cstdio>
 
 #include "Image.h"
 #include "FormUtilities.h"
@@ -13,13 +13,13 @@
 
 namespace fs = std::filesystem;
 
+/* For debug 
 int idx = 0;
-/* For debug */
 void debug_image(const Image& i) {
     char buff[50];
     sprintf(buff, "../../assets/tmp%d.png", idx++);
     i.save_png(buff);
-}
+} */
 
 /* Retourne la liste d'image contenu dans le repertoire passer en parametre */
 void getFilesInDirectory(std::vector<Image>& out, const std::string& directory) {
@@ -47,7 +47,7 @@ void getFilesInDirectory(std::vector<Image>& out, const std::string& directory) 
     }
 }
 
-void mosaic(Image& image, int R, int C, std::vector<Image> set, ResizeManager rm, SimilarityManager sm) {
+void mosaic(Image& image, int R, int C, std::vector<Image> set, const ResizeManager& rm, const SimilarityManager& sm) {
 
     // Step 1 - Découpe de l'image en plusieurs vignettes
     std::vector<Image> vignettes;
@@ -65,23 +65,17 @@ void mosaic(Image& image, int R, int C, std::vector<Image> set, ResizeManager rm
 
     assert(vignettes.size() == (size_t)s);
 
-    // Step 2 - Mise a la resolution, l'ensemble des images du set
-    // et calcul des histogrammes
-    std::vector<Histogram> list_histo_set;
- 
-    int k = 0;
+    // Step 2 - Mise a la resolution de l'ensemble des images du set
     for (Image& im : set) {
         rm.resize(im, w, h);
-        Histogram out = im.histo();
-        list_histo_set.push_back(out);
     }
 
     // Step 3 - Pour chaque vignette on determine quelle image du set est la plus ressemblante
     std::vector<Image> J;
 
     for (const Image& vignette : vignettes) {
-        auto out = vignette.histo();
-        int res = sm.sim(out, list_histo_set);
+        Histogram out = vignette.histo();
+        int res = sm.sim(out, set);
         if (res == -1) {
             std::cout << "Error : no image found" << std::endl;
         } else {
@@ -99,8 +93,8 @@ int main() {
     std::string pathD; form("Directory with a set", pathD, "./assets/set", directory_exist);
     std::string row; form("Number of row", row, "20", is_number);
     std::string col; form("Number of col", col, "20", is_number);
-    std::string funcResize; form("Methods for resize NormalCrop/CenterCrop", funcResize, "CenterCrop", resize_function_exist);
-    std::string funcSim; form("Methods for similarity diffHisto", funcSim, "diffHisto", similarity_function_exist);
+    std::string funcResize; form("Methods for resize NormalCrop/CenterCrop", funcResize, "NormalCrop", resize_function_exist);
+    std::string funcSim; form("Methods for similarity diffHisto/diffHistoZone", funcSim, "diffHisto", similarity_function_exist);
 
     // Creation de l'image principale
     Image image(pathI.c_str());

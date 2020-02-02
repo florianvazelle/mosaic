@@ -11,17 +11,21 @@ public:
     SimilarityManager(const std::string& funcName) {
         if (funcName == "diffHisto") {
             _sim = &SimilarityManager::diffHisto;
+        } else if (funcName == "diffHistoZone") {
+            _sim = &SimilarityManager::diffHistoZone;
         } else {
+            // Valeur par defaut
             _sim = &SimilarityManager::diffHisto;
         }
     };
 
-    int sim(const Histogram& main_histo, const std::vector<Histogram>& list_histo) { return (this->*_sim)(main_histo, list_histo); };
+    int sim(const Histogram& main_histo, const std::vector<Image>& set) const { return (this->*_sim)(main_histo, set); };
 
-    int diffHisto(const Histogram& main_histo, const std::vector<Histogram>& list_histo);
+    int diffHisto(const Histogram& main_histo, const std::vector<Image>& set) const;
+    int diffHistoZone(const Histogram& main_histo, const std::vector<Image>& set) const;
 
 private:
-    int (SimilarityManager::*_sim)(const Histogram&, const std::vector<Histogram>&);
+    int (SimilarityManager::*_sim)(const Histogram&, const std::vector<Image>&) const;
 };
 
 #endif
