@@ -3,6 +3,7 @@
 #include <iomanip>
 
 #include "SimilarityManager.h"
+#include "Image.h"
 
 int SimilarityManager::diffHisto(const Histogram& main_histo, const std::vector<Image>& set) const {
     int idx_bin = -1;
@@ -46,5 +47,46 @@ int SimilarityManager::diffHisto(const Histogram& main_histo, const std::vector<
 }
 
 int SimilarityManager::diffHistoZone(const Histogram& main_histo, const std::vector<Image>& set) const {
-    return 0;
+    int idx_bin = -1;
+    float min_distance = std::numeric_limits<float>::infinity();
+
+    for (int idx = 0; idx < set.size(); idx++) {
+        const Image& im = set[idx];
+        float distance = 0;
+
+        // On determine en combien de zone on devrait decouper l'image
+        int R, C;
+
+        if (im.w() == 1) {
+            C = 1;
+        } else {
+            C = (im.w() % 2 == 0) ? 2 : 3;
+        }
+
+        if (im.h() == 1) {
+            R = 1;
+        } else {
+            R = (im.h() % 2 == 0) ? 2 : 3;
+        }
+
+        int w = im.w() / C;
+        int h = im.h() / R;
+
+        // On separe l'image en zone
+        for (int i = 0; i < R; i++) {
+            for (int j = 0; j < C; j++) {
+                Image tmp(im, j * w, i * h, w, h);
+                Histogram histo = tmp.histo();
+                distance += sqrt(pow(main_histo.r[j] - histo.r[j], 2.0) + pow(main_histo.g[j] - histo.g[j], 2.0) + pow(main_histo.b[j] - histo.b[j], 2.0));
+            }
+        }
+
+        if (distance < min_distance) {
+            idx_bin = idx;
+            min_distance = distance;
+        }
+
+    }
+
+    return idx_bin; 
 }
