@@ -3,7 +3,6 @@
 #include <vector>
 #include <filesystem>
 #include <cassert>
-#include <ctime>
 #include <cstdio>
 
 #include "Image.h"
@@ -28,7 +27,7 @@ void getFilesInDirectory(std::vector<Image>& out, const std::string& directory) 
         fs::path path = p.path();
         fs::path ext = path.extension();
 
-        // On ne selectionne que les image PNG
+        // On ne selectionne que des image
         if (ext == ".png" || ext == ".jpg" || ext == ".bmp") {
             std::string path_str = path.string();
 
@@ -58,8 +57,7 @@ void mosaic(Image& image, int R, int C, std::vector<Image> set, const ResizeMana
 
     for (int i = 0; i < R; i++) {
         for (int j = 0; j < C; j++) {
-            Image tmp(image, j * w, i * h, w, h);
-            vignettes.push_back(tmp);
+            vignettes.push_back(Image(image, j * w, i * h, w, h));
         }
     }
 
@@ -116,7 +114,9 @@ int main() {
     mosaic(image, R, C, set, rm, sm);
 
     // Sauvegarde de l'image
-    image.save_png("../../assets/out.png");
+    char buff[50];
+    sprintf(buff, "../../assets/out-%dx%d.png", R, C);
+    image.save_png(buff);
 
     return 0;
 }

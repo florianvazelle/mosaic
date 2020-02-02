@@ -33,13 +33,13 @@ Image::Image(char const* filename) {
 Image::Image(int w, int h) {
     _h = h;
     _w = w;
-    _pixels.resize((size_t)w * h);
+    _pixels.resize(w * h);
 }
 
-Image::Image(Image& im, int x, int y, int w, int h) {
+Image::Image(const Image& im, int x, int y, int w, int h) {
     _h = h;
     _w = w;
-    _pixels.resize((size_t)w * h);
+    _pixels.resize(w * h);
 
     Image::View v = im.view(x, y, w, h);
 
@@ -55,7 +55,7 @@ Image::Image(const std::vector<Image>& list_im, int row, int col) {
 
     _h = height * row;
     _w = width * col;
-    _pixels.resize((size_t)_w * _h);
+    _pixels.resize(_w * _h);
 
     int idx = 0;
     for (int i = 0; i < row; i++) {
