@@ -12,7 +12,8 @@ int SimilarityManager::diffHisto(const Histogram& main_histo, const std::vector<
     // Pour toute les images du set
     for (int idx = 0; idx < set.size(); idx++) {
         // On calcul son histogramme
-        Histogram histo = set[idx].histo();
+        Histogram histo;
+        set[idx].histo(histo);
         float distance = 0;
 
         // On regroupe les couleurs 16 par 16
@@ -76,8 +77,13 @@ int SimilarityManager::diffHistoZone(const Histogram& main_histo, const std::vec
         for (int i = 0; i < R; i++) {
             for (int j = 0; j < C; j++) {
                 Image tmp(im, j * w, i * h, w, h);
-                Histogram histo = tmp.histo();
-                distance += sqrt(pow(main_histo.r[j] - histo.r[j], 2.0) + pow(main_histo.g[j] - histo.g[j], 2.0) + pow(main_histo.b[j] - histo.b[j], 2.0));
+                Histogram histo;
+                tmp.histo(histo);
+                
+                for(int k = 0; k < 256; k++) {
+                    distance += sqrt(pow(main_histo.r[k] - histo.r[k], 2.0) + pow(main_histo.g[k] - histo.g[k], 2.0) + pow(main_histo.b[k] - histo.b[k], 2.0));
+                }
+
             }
         }
 

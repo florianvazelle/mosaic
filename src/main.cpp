@@ -53,7 +53,6 @@ void mosaic(Image& image, int R, int C, std::vector<Image> set, const ResizeMana
 
     int w = image.w() / C;
     int h = image.h() / R;
-    int s = R * C;
 
     for (int i = 0; i < R; i++) {
         for (int j = 0; j < C; j++) {
@@ -61,7 +60,7 @@ void mosaic(Image& image, int R, int C, std::vector<Image> set, const ResizeMana
         }
     }
 
-    assert(vignettes.size() == (size_t)s);
+    assert(vignettes.size() == (size_t)R * C);
 
     // Step 2 - Mise a la resolution de l'ensemble des images du set
     for (Image& im : set) {
@@ -72,7 +71,8 @@ void mosaic(Image& image, int R, int C, std::vector<Image> set, const ResizeMana
     std::vector<Image> J;
 
     for (const Image& vignette : vignettes) {
-        Histogram out = vignette.histo();
+        Histogram out;
+        vignette.histo(out);
         int res = sm.sim(out, set);
         if (res == -1) {
             std::cout << "Error : no image found" << std::endl;

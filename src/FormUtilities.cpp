@@ -4,6 +4,9 @@
 #include <algorithm>
 #include <cctype>
 
+#include <sys/stat.h>
+#include <sys/types.h>
+
 void form(const std::string& question, std::string& answer, const std::string& default_answer, std::function<bool(const std::string&)> const& check) {
     do {
         std::cout << question << " (default is \"" << default_answer << "\"): ";

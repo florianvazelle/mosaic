@@ -10,13 +10,13 @@ cd $DIR/build
 
 ###
 printf "== Installing Packages\n"
+conan remote add bincrafters "https://api.bintray.com/conan/bincrafters/public-conan"
 if conan install .. --build missing ; then
-  printf "== Installed Packag  OK\n"
+  printf "== Installed Package  OK\n"
 else
   printf "== FAILED to Install Packages - Exiting\n"
   exit 1
 fi
-exit 0
 
 ###
 printf "== Creating build system\n"

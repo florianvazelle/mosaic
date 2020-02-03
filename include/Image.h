@@ -36,9 +36,9 @@ public:
     };
 
     auto view(int x, int y, int w, int h) const { return View{ x, y, w, h, *this }; }
-    Histogram const& histo(void) const;;
+    void histo(Histogram &color_histo) const;
 
-private:
+  private:
     std::vector<std::array<float, 3>> _pixels;
     int _w;
     int _h;
