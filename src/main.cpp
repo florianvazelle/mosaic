@@ -12,13 +12,13 @@
 
 namespace fs = std::filesystem;
 
-/* For debug 
+/* For debug */
 int idx = 0;
 void debug_image(const Image& i) {
     char buff[50];
     sprintf(buff, "../../assets/tmp%d.png", idx++);
     i.save_png(buff);
-} */
+}
 
 /* Retourne la liste d'image contenu dans le repertoire passer en parametre */
 void getFilesInDirectory(std::vector<Image>& out, const std::string& directory) {
@@ -91,7 +91,7 @@ int main() {
     std::string pathD; form("Directory with a set", pathD, "./assets/set", directory_exist);
     std::string row; form("Number of row", row, "20", is_number);
     std::string col; form("Number of col", col, "20", is_number);
-    std::string funcResize; form("Methods for resize NormalCrop/CenterCrop", funcResize, "NormalCrop", resize_function_exist);
+    std::string funcResize; form("Methods for resize NormalCrop/CenterCrop/Resize", funcResize, "NormalCrop", resize_function_exist);
     std::string funcSim; form("Methods for similarity diffHisto/diffHistoZone", funcSim, "diffHisto", similarity_function_exist);
 
     // Creation de l'image principale

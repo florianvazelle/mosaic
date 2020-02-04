@@ -10,3 +10,23 @@ void ResizeManager::CenterCrop(Image& im, int w, int h) const {
 	im = Image(im, x, y, w, h);
 }
 
+void ResizeManager::Resize(Image& im, int w, int h) const {
+	int scalex = im.w() / w;
+	int scaley = im.h() / h;
+	Image tmp(w, h);
+
+	std::array<float, 3> filtered_row[w];
+    for (int r = 0; r < h; r++) {
+		if (r * scaley < im.h()) {
+			std::array<float, 3> *row = im[r * scaley];
+			for (int c = 0; c < w; c++) {
+				if (c * scalex < im.w()) {
+					filtered_row[c] = row[c * scalex];
+				} 
+			}
+			std::copy(filtered_row, filtered_row + w, tmp[r]);
+		}
+	}
+	
+	im = tmp;
+}
