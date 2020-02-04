@@ -52,7 +52,7 @@ std::function<bool(const std::string&)> const& is_number = [](const std::string&
 
 std::function<bool(const std::string&)> const& resize_function_exist = [](const std::string& name) {
     // Check if function name exist
-    bool resize_function_exist = (name == "NormalCrop" || name == "CenterCrop" || name == "Resize");
+    bool resize_function_exist = (name == "NormalCrop" || name == "CenterCrop" || name == "Resize" || name == "ResizeCrop");
     if (!resize_function_exist) {
         std::cout << "Is not a valid function !" << std::endl;
     }

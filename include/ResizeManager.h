@@ -14,6 +14,8 @@ public:
             _resize = &ResizeManager::CenterCrop;
         } else if (funcName == "Resize") {
             _resize = &ResizeManager::Resize;
+        } else if (funcName == "Resize") {
+            _resize = &ResizeManager::ResizeCrop;
         } else {
             // Valeur par defaut
             _resize = &ResizeManager::NormalCrop;
@@ -24,6 +26,7 @@ public:
     void NormalCrop(Image& im, int w, int h) const;
     void CenterCrop(Image &im, int w, int h) const;
     void Resize(Image &im, int w, int h) const;
+    void ResizeCrop(Image &im, int w, int h) const;
 
   private:
     void (ResizeManager::*_resize)(Image&, int, int) const;

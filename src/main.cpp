@@ -91,7 +91,7 @@ int main() {
     std::string pathD; form("Directory with a set", pathD, "./assets/set", directory_exist);
     std::string row; form("Number of row", row, "20", is_number);
     std::string col; form("Number of col", col, "20", is_number);
-    std::string funcResize; form("Methods for resize NormalCrop/CenterCrop/Resize", funcResize, "NormalCrop", resize_function_exist);
+    std::string funcResize; form("Methods for resize NormalCrop/CenterCrop/Resize/ResizeCrop", funcResize, "NormalCrop", resize_function_exist);
     std::string funcSim; form("Methods for similarity diffHisto/diffHistoZone", funcSim, "diffHisto", similarity_function_exist);
 
     // Creation de l'image principale
