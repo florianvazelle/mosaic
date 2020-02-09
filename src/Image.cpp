@@ -96,19 +96,18 @@ void Image::save_png(char const* filename) {
     SDL_FreeSurface(out_surface);
 }
 
-
 // https://stackoverflow.com/questions/3018313/algorithm-to-convert-rgb-to-hsv-and-hsv-to-rgb-in-range-0-255-for-both
 void Image::rgb2hsv() {
-    for(std::array<float, 3>& p : _pixels) {
+    for (std::array<float, 3> &p : _pixels) {
 
         std::array<float, 3> out;
-        float      min, max, delta;
+        float min, max, delta;
 
         min = p[0] < p[1] ? p[0] : p[1];
-        min = min  < p[2] ? min  : p[2];
+        min = min < p[2] ? min : p[2];
 
         max = p[0] > p[1] ? p[0] : p[1];
-        max = max  > p[2] ? max  : p[2];
+        max = max > p[2] ? max : p[2];
 
         out[2] = max;
         delta = max - min;
@@ -118,7 +117,8 @@ void Image::rgb2hsv() {
             p = out;
             continue;
         }
-        if(max > 0.0f) {
+
+        if (max > 0.0f) {
             out[1] = delta / max;
         } else {
             out[1] = 0.0f;
@@ -126,19 +126,20 @@ void Image::rgb2hsv() {
             p = out;
             continue;
         }
-        if(p[0] >= max) {
+
+        if (p[0] >= max) {
             out[0] = (p[1] - p[2]) / delta;
         } else {
-            if(p[1] >= max) {
-                out[0] = 2.0f + ( p[2] - p[0] ) / delta;
+            if (p[1] >= max) {
+                out[0] = 2.0f + (p[2] - p[0]) / delta;
             } else {
-                out[0] = 4.0f + ( p[0] - p[1] ) / delta;
+                out[0] = 4.0f + (p[0] - p[1]) / delta;
             }
         }
 
         out[0] *= 60.0f;
 
-        if(out[0] < 0.0f) {
+        if (out[0] < 0.0f) {
             out[0] += 360.0f;
         }
 
@@ -146,23 +147,24 @@ void Image::rgb2hsv() {
     }
 }
 
-
 void Image::hsv2rgb() {
-    for(std::array<float, 3>& p : _pixels) {
+    for (std::array<float, 3> &p : _pixels) {
 
-        double      hh, k, q, t, ff;
-        long        i;
+        double hh, k, q, t, ff;
+        long i;
         std::array<float, 3> out;
 
-        if(p[1] <= 0.0) {
+        if (p[1] <= 0.0) {
             out[0] = p[2];
             out[1] = p[2];
             out[2] = p[2];
             p = out;
             continue;
         }
+
         hh = p[0];
-        if(hh >= 360.0) hh = 0.0;
+        if (hh >= 360.0)
+            hh = 0.0;
         hh /= 60.0;
         i = (long)hh;
         ff = hh - i;
@@ -170,7 +172,7 @@ void Image::hsv2rgb() {
         q = p[2] * (1.0 - (p[1] * ff));
         t = p[2] * (1.0 - (p[1] * (1.0 - ff)));
 
-        switch(i) {
+        switch (i) {
             case 0:
                 out[0] = p[2];
                 out[1] = t;
@@ -206,6 +208,5 @@ void Image::hsv2rgb() {
         }
 
         p = out;
-
     }
 }

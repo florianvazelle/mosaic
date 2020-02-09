@@ -12,14 +12,6 @@
 
 namespace fs = std::filesystem; // g++ -v >= 9
 
-/* For debug */
-int idx = 0;
-void debug_image(Image& i) {
-    char buff[50];
-    sprintf(buff, "../../assets/tmp%d.png", idx++);
-    i.save_png(buff);
-}
-
 /* Retourne la liste d'image contenu dans le repertoire passer en parametre */
 void getFilesInDirectory(std::vector<Image>& out, const std::string& directory, const std::string& type) {
 
