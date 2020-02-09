@@ -14,7 +14,7 @@ public:
             _resize = &ResizeManager::CenterCrop;
         } else if (funcName == "Resize") {
             _resize = &ResizeManager::Resize;
-        } else if (funcName == "Resize") {
+        } else if (funcName == "ResizeCrop") {
             _resize = &ResizeManager::ResizeCrop;
         } else {
             // Valeur par defaut

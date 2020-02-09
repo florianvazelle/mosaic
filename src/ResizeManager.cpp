@@ -38,27 +38,25 @@ void ResizeManager::ResizeCrop(Image& im, int w, int h) const {
 	int diffx = im.w() - w;
 	int diffy = im.h() - h;
 
-    Image tmp(w, h);
-
-	int height, width;
+	Image tmp(w, h);
 
     // On récupère la plus grande différence
 	if (diffx < diffy) {
-		height = h;
-		width = im.w();
-		scalex = 1;
-	} else {
-		height = im.h();
-		width = w;
+		int y = im.h() / 2 - h / 2;
+		im = Image(im, 0, y, im.w(), h);
 		scaley = 1;
+	} else {
+		int x = im.w() / 2 - w / 2;
+		im = Image(im, x, 0, w, im.h());
+		scalex = 1;
 	}
 
 	std::array<float, 3> filtered_row[w];
-	for (int r = 0; r < height; r++) {
+	for (int r = 0; r < h; r++) {
 		if (r * scaley < im.h()) {
 			std::array<float, 3> *row = im[r * scaley];
-			for (int c = 0; c < width; c++) {
-				filtered_row[c] = row[c* scalex];
+			for (int c = 0; c < w; c++) {
+				filtered_row[c] = row[c * scalex];
 			}
 			std::copy(filtered_row, filtered_row + w, tmp[r]);
 		}
