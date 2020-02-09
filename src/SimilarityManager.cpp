@@ -62,24 +62,23 @@ int SimilarityManager::diffHisto(const Image& im, const std::vector<Image>& set)
 
         // On regroupe les couleurs 16 par 16
         for (int i = 0; i < 16; i++) {
-            float color1[3] = { 0, 0, 0 }, color2[3] = { 0, 0, 0 };
+            float color[3] = { 0, 0, 0 };
             for (int j = i * 16; j < 16 * (i + 1); j++) {
 
                 // Pour les trois couleurs
-                color2[0] += histo.r(j);
-                color2[1] += histo.g(j);
-                color2[2] += histo.b(j);
+                color[0] += histo.r(j);
+                color[1] += histo.g(j);
+                color[2] += histo.b(j);
 
             }
             // Et on calcul la distance entre l'histogramme d'origine et celui de l'image courante
-            distance += sqrt(pow(bin[i][0] - color2[0], 2.0) + pow(bin[i][1] - color2[1], 2.0) + pow(bin[i][2] - color2[2], 2.0));
+            distance += sqrt(pow(bin[i][0] - color[0], 2.0) + pow(bin[i][1] - color[1], 2.0) + pow(bin[i][2] - color[2], 2.0));
         }
 
         if (distance < min_distance) {
             idx_bin = idx;
             min_distance = distance;
         }
-
     }
 
     // On retourne l'index de l'image qui a la distance la plus petite
@@ -123,7 +122,6 @@ int SimilarityManager::diffHistoZone(const Image& im, const std::vector<Image>& 
                 for(int k = 0; k < 256; k++) {
                     distance += sqrt(pow(main_histo.r(k) - histo.r(k), 2.0) + pow(main_histo.g(k) - histo.g(k), 2.0) + pow(main_histo.b(k) - histo.b(k), 2.0));
                 }
-
             }
         }
 
@@ -131,7 +129,6 @@ int SimilarityManager::diffHistoZone(const Image& im, const std::vector<Image>& 
             idx_bin = idx;
             min_distance = distance;
         }
-
     }
 
     return idx_bin; 
