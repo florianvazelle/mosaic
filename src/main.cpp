@@ -10,7 +10,7 @@
 #include "ResizeManager.h"
 #include "SimilarityManager.h"
 
-namespace fs = std::filesystem;
+namespace fs = std::filesystem; // g++ -v >= 9
 
 /* For debug */
 int idx = 0;
@@ -71,9 +71,7 @@ void mosaic(Image& image, int R, int C, std::vector<Image> set, const ResizeMana
     std::vector<Image> J;
 
     for (const Image& vignette : vignettes) {
-        Histogram out;
-        vignette.histo(out);
-        int res = sm.sim(out, set);
+        int res = sm.sim(vignette, set);
         if (res == -1) {
             std::cout << "Error : no image found" << std::endl;
         } else {
@@ -92,7 +90,7 @@ int main() {
     std::string row; form("Number of row", row, "20", is_number);
     std::string col; form("Number of col", col, "20", is_number);
     std::string funcResize; form("Methods for resize NormalCrop/CenterCrop/Resize/ResizeCrop", funcResize, "NormalCrop", resize_function_exist);
-    std::string funcSim; form("Methods for similarity diffHisto/diffHistoZone", funcSim, "diffHisto", similarity_function_exist);
+    std::string funcSim; form("Methods for similarity diffVal/diffHisto/diffHistoZone", funcSim, "diffHisto", similarity_function_exist);
 
     // Creation de l'image principale
     Image image(pathI.c_str());
@@ -114,8 +112,8 @@ int main() {
     mosaic(image, R, C, set, rm, sm);
 
     // Sauvegarde de l'image
-    char buff[50];
-    sprintf(buff, "../../assets/out-%dx%d.png", R, C);
+    char buff[100];
+    sprintf(buff, "../../assets/out-%s-%s-%dx%d.png", funcResize.c_str(), funcSim.c_str(), R, C);
     image.save_png(buff);
 
     return 0;

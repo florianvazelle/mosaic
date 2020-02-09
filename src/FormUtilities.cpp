@@ -61,7 +61,7 @@ std::function<bool(const std::string&)> const& resize_function_exist = [](const 
 
 std::function<bool(const std::string&)> const& similarity_function_exist = [](const std::string& name) {
     // Check if function name exist
-    bool similarity_function_exist = (name == "diffHisto" || name == "diffHistoZone");
+    bool similarity_function_exist = (name == "diffVal" || name == "diffHisto" || name == "diffHistoZone");
     if (!similarity_function_exist) {
         std::cout << "Is not a valid function !" << std::endl;
     }

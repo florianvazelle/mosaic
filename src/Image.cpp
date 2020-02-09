@@ -89,11 +89,3 @@ void Image::save_png(char const* filename) const {
     IMG_SavePNG(out_surface, filename);
     SDL_FreeSurface(out_surface);
 }
-
-void Image::histo(Histogram &color_histo) const {
-  for (const auto &pixel : _pixels) {
-    color_histo.r[int(pixel[0])] += 1;
-    color_histo.g[int(pixel[1])] += 1;
-    color_histo.b[int(pixel[2])] += 1;
-  }
-}
