@@ -41,6 +41,19 @@ int SimilarityManager::diffHisto(const Image& im, const std::vector<Image>& set)
 
     const Histogram main_histo(im);
 
+    // On regroupe les couleurs de l'image principale 16 par 16
+    float bin[16][3];
+    for (int i = 0; i < 16; i++) {
+        bin[i][0] = 0;
+        bin[i][1] = 0;
+        bin[i][2] = 0;
+        for (int j = i * 16; j < 16 * (i + 1); j++) {
+            bin[i][0] += main_histo.r(j);
+            bin[i][1] += main_histo.g(j);
+            bin[i][2] += main_histo.b(j);
+        }
+    }
+
     // Pour toute les images du set
     for (int idx = 0; idx < set.size(); idx++) {
         // On calcul son histogramme
@@ -53,18 +66,13 @@ int SimilarityManager::diffHisto(const Image& im, const std::vector<Image>& set)
             for (int j = i * 16; j < 16 * (i + 1); j++) {
 
                 // Pour les trois couleurs
-                color1[0] += main_histo.r(j);
                 color2[0] += histo.r(j);
-
-                color1[1] += main_histo.g(j);
                 color2[1] += histo.g(j);
-
-                color1[2] += main_histo.b(j);
                 color2[2] += histo.b(j);
 
             }
             // Et on calcul la distance entre l'histogramme d'origine et celui de l'image courante
-            distance += sqrt(pow(color1[0] - color2[0], 2.0) + pow(color1[1] - color2[1], 2.0) + pow(color1[2] - color2[2], 2.0));
+            distance += sqrt(pow(bin[i][0] - color2[0], 2.0) + pow(bin[i][1] - color2[1], 2.0) + pow(bin[i][2] - color2[2], 2.0));
         }
 
         if (distance < min_distance) {

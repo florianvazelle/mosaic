@@ -35,9 +35,6 @@ public:
 
     auto view(int x, int y, int w, int h) const { return View{ x, y, w, h, *this }; }
 
-    void rgb2hsv();
-    void hsv2rgb();
-
   private:
     std::vector<std::array<float, 3>> _pixels;
     int _w;
