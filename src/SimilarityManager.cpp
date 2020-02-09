@@ -20,8 +20,14 @@ int SimilarityManager::diffVal(const Image& im, const std::vector<Image>& set) c
 
         // On parcours l'ensemble des pixels, chaque image est sensé avoir la meme taille
         for (int i = 0; i < im.h() * im.w(); i++) {
-            // Et on calcul la distance entre le pixel d'origine et celui de l'image courante
-            distance += sqrt(pow(row_im[i][0] - row_set[i][0], 2.0) + pow(row_im[i][1] - row_set[i][1], 2.0) + pow(row_im[i][2] - row_set[i][2], 2.0));
+            if (_channel == "RGB") {
+                // Et on calcul la distance entre le pixel d'origine et celui de l'image courante
+                distance += sqrt(pow(row_im[i][0] - row_set[i][0], 2.0) + pow(row_im[i][1] - row_set[i][1], 2.0) + pow(row_im[i][2] - row_set[i][2], 2.0));
+            } else if (_channel == "H") {
+                distance += abs(row_im[i][0] - ((row_im[i][0] + row_set[i][0]) / 2));
+            } else if (_channel == "V") {
+                distance += abs(row_im[i][2] - row_set[i][2]) / 255.0;
+            }
         }
 
         if (distance < min_distance) {
@@ -71,8 +77,15 @@ int SimilarityManager::diffHisto(const Image& im, const std::vector<Image>& set)
                 color[2] += histo.b(j);
 
             }
-            // Et on calcul la distance entre l'histogramme d'origine et celui de l'image courante
-            distance += sqrt(pow(bin[i][0] - color[0], 2.0) + pow(bin[i][1] - color[1], 2.0) + pow(bin[i][2] - color[2], 2.0));
+
+            if (_channel == "RGB") {
+                // Et on calcul la distance entre le pixel d'origine et celui de l'image courante
+                distance += sqrt(pow(bin[i][0] - color[0], 2.0) + pow(bin[i][1] - color[1], 2.0) + pow(bin[i][2] - color[2], 2.0));
+            } else if (_channel == "H") {
+                distance += abs(bin[i][0] - ((bin[i][0] + color[0]) / 2));
+            } else if (_channel == "V") {
+                distance += abs(bin[i][2] - color[2]) / 255.0;
+            }
         }
 
         if (distance < min_distance) {
@@ -116,11 +129,17 @@ int SimilarityManager::diffHistoZone(const Image& im, const std::vector<Image>& 
         // On separe l'image en zone
         for (int i = 0; i < R; i++) {
             for (int j = 0; j < C; j++) {
-                const Image tmp(other, j * w, i * h, w, h);
                 const Histogram histo(Image(other, j * w, i * h, w, h));
                 
                 for(int k = 0; k < 256; k++) {
-                    distance += sqrt(pow(main_histo.r(k) - histo.r(k), 2.0) + pow(main_histo.g(k) - histo.g(k), 2.0) + pow(main_histo.b(k) - histo.b(k), 2.0));
+                    if (_channel == "RGB") {
+                        // Et on calcul la distance entre le pixel d'origine et celui de l'image courante
+                        distance += sqrt(pow(main_histo.r(k) - histo.r(k), 2.0) + pow(main_histo.g(k) - histo.g(k), 2.0) + pow(main_histo.b(k) - histo.b(k), 2.0));
+                    } else if (_channel == "H") {
+                        distance += abs(main_histo.r(k) - ((main_histo.r(k) + histo.r(k)) / 2));
+                    } else if (_channel == "V") {
+                        distance += abs(main_histo.b(k) - histo.b(k)) / 255.0;
+                    }
                 }
             }
         }

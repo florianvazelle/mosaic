@@ -7,4 +7,6 @@ extern std::function<bool(const std::string&)> const& file_exist;
 extern std::function<bool(const std::string&)> const& directory_exist;
 extern std::function<bool(const std::string&)> const& is_number;
 extern std::function<bool(const std::string&)> const& resize_function_exist;
+extern std::function<bool(const std::string&)> const& type_exist;
+extern std::function<bool(const std::string&)> const& channel_exist;
 extern std::function<bool(const std::string&)> const& similarity_function_exist;

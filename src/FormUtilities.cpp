@@ -59,6 +59,24 @@ std::function<bool(const std::string&)> const& resize_function_exist = [](const 
     return resize_function_exist;
 };
 
+std::function<bool(const std::string&)> const& type_exist = [](const std::string& name) {
+    // Check if function name exist
+    bool type_exist = (name == "RGB" || name == "HSV");
+    if (!type_exist) {
+        std::cout << "Is not a valid type !" << std::endl;
+    }
+    return type_exist;
+};
+
+std::function<bool(const std::string&)> const& channel_exist = [](const std::string& name) {
+    // Check if function name exist
+    bool channel_exist = (name == "H" || name == "V");
+    if (!channel_exist) {
+        std::cout << "Is not a valid type !" << std::endl;
+    }
+    return channel_exist;
+};
+
 std::function<bool(const std::string&)> const& similarity_function_exist = [](const std::string& name) {
     // Check if function name exist
     bool similarity_function_exist = (name == "diffVal" || name == "diffHisto" || name == "diffHistoZone");

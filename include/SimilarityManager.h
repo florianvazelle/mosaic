@@ -7,8 +7,10 @@
 class SimilarityManager {
 public:
 
-    SimilarityManager() { _sim = &SimilarityManager::diffHisto; };
-    SimilarityManager(const std::string& funcName) {
+    SimilarityManager() { _sim = &SimilarityManager::diffHisto; _channel = "RGB"; };
+    SimilarityManager(const std::string& funcName, const std::string& channel) {
+        _channel = channel;
+
         if (funcName == "diffVal") {
             _sim = &SimilarityManager::diffVal;
         } else if (funcName == "diffHisto") {
@@ -29,6 +31,7 @@ public:
 
 private:
     int (SimilarityManager::*_sim)(const Image&, const std::vector<Image>&) const;
+    std::string _channel;
 };
 
 #endif
