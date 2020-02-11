@@ -15,7 +15,7 @@ void ResizeManager::Resize(Image& im, int w, int h) const {
 	int scaley = im.h() / h;
 	Image tmp(w, h);
 
-	std::array<float, 3> filtered_row[w];
+	std::array<float, 3> *filtered_row = new std::array<float, 3>[w];
     for (int r = 0; r < h; r++) {
 		if (r * scaley < im.h()) {
 			std::array<float, 3> *row = im[r * scaley];
@@ -51,7 +51,7 @@ void ResizeManager::ResizeCrop(Image& im, int w, int h) const {
 		scalex = 1;
 	}
 
-	std::array<float, 3> filtered_row[w];
+	std::array<float, 3>* filtered_row = new std::array<float, 3>[w];
 	for (int r = 0; r < h; r++) {
 		if (r * scaley < im.h()) {
 			std::array<float, 3> *row = im[r * scaley];
