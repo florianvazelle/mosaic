@@ -13,7 +13,7 @@ int SimilarityManager::diffVal(const Image& im, const std::vector<Image>& set) c
     const auto& row_im = im.pixels();
 
     // Pour toute les images du set
-    for (int idx = 0; idx < set.size(); idx++) {
+    for (size_t idx = 0; idx < set.size(); idx++) {
         float distance = 0;
 
         const auto& row_set = set[idx].pixels();
@@ -61,7 +61,7 @@ int SimilarityManager::diffHisto(const Image& im, const std::vector<Image>& set)
     }
 
     // Pour toute les images du set
-    for (int idx = 0; idx < set.size(); idx++) {
+    for (size_t idx = 0; idx < set.size(); idx++) {
         // On calcul son histogramme
         const Histogram histo(set[idx]);
         float distance = 0;
@@ -104,7 +104,7 @@ int SimilarityManager::diffHistoZone(const Image& im, const std::vector<Image>& 
 
     const Histogram main_histo(im);
 
-    for (int idx = 0; idx < set.size(); idx++) {
+    for (size_t idx = 0; idx < set.size(); idx++) {
         const Image& other = set[idx];
         float distance = 0;
 

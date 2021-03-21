@@ -1,4 +1,6 @@
-﻿#include <iostream>
+﻿#include <CLI/CLI.hpp>
+
+#include <iostream>
 #include <string>
 #include <vector>
 #include <filesystem>
@@ -6,7 +8,6 @@
 #include <cstdio>
 
 #include "Image.h"
-#include "FormUtilities.h"
 #include "ResizeManager.h"
 #include "SimilarityManager.h"
 
@@ -75,19 +76,85 @@ void mosaic(Image& image, int R, int C, std::vector<Image> set, const ResizeMana
     image = Image(J, R, C);
 }
 
-int main() {
+int main(int argc, char** argv) {
     // Demande a l'utilisateur les valeurs en entree
-    std::string pathI; form("Path of I", pathI, "./assets/test.png", file_exist);
-    std::string pathD; form("Directory with a set", pathD, "./assets/set", directory_exist);
-    std::string row; form("Number of row", row, "20", is_number);
-    std::string col; form("Number of col", col, "20", is_number);
-    std::string funcResize; form("Methods for resize NormalCrop/CenterCrop/Resize/ResizeCrop", funcResize, "NormalCrop", resize_function_exist);
-    std::string type; form("RGB or HSV ? RGB/HSV", type, "RGB", type_exist);
-    std::string channel = "RGB";
-    if(type == "HSV") {
-        form("Channel H/V", channel, "H", channel_exist);
+    CLI::App app("A C++ program for creating photomosaic images.\n");
+
+    std::string pathI;
+    app.add_option("PNG", pathI, "Path of a base image")->required()->check(CLI::ExistingFile);
+
+    std::string pathD;
+    app.add_option("DIR", pathD, "Directory with a set")->required()->check(CLI::ExistingDirectory);
+
+    std::string pathOut = "./out.png";
+    app.add_option("-o,--output", pathOut, "Path of the output");
+
+
+    int row = 20, col = 20;
+    app.add_option("-r,--row", row, "Number of row")->check(CLI::PositiveNumber);
+    app.add_option("-c,--col", col, "Number of col")->check(CLI::PositiveNumber);
+
+    enum class ResizeMethod : int { NormalCrop, CenterCrop, Resize, ResizeCrop };
+
+    ResizeMethod resize{ ResizeMethod::NormalCrop };
+
+    std::map<std::string, ResizeMethod> mapResize{
+        {"NormalCrop", ResizeMethod::NormalCrop},
+        {"CenterCrop", ResizeMethod::CenterCrop},
+        {"Resize", ResizeMethod::Resize},
+        {"ResizeCrop", ResizeMethod::ResizeCrop},
+    };
+
+    app.add_option("--resize", resize, "Resize Method settings")
+        ->transform(CLI::CheckedTransformer(mapResize, CLI::ignore_case));
+
+    enum class SimilarityMethod : int { diffVal, diffHisto, diffHistoZone };
+
+    SimilarityMethod similarity{ SimilarityMethod::diffVal };
+
+    std::map<std::string, SimilarityMethod> mapSimilarity{
+        {"diffVal", SimilarityMethod::diffVal},
+        {"diffHisto", SimilarityMethod::diffHisto},
+        {"diffHistoZone", SimilarityMethod::diffHistoZone},
+    };
+
+    app.add_option("--similarity", similarity, "Resize Method settings")
+        ->transform(CLI::CheckedTransformer(mapSimilarity, CLI::ignore_case));
+
+    enum class Channel : int { None, H, S };
+
+    Channel channel{Channel::None};
+
+    std::map<std::string, Channel> mapChannel{
+        {"H", Channel::H},
+        {"S", Channel::S},
+    };
+
+    app.add_option("--hsv", channel,
+                   "By default, image comparisons are done in rgb but you can "
+                   "specify a channel to do this on hue or saturation")
+        ->transform(CLI::CheckedTransformer(mapChannel, CLI::ignore_case));
+
+    CLI11_PARSE(app, argc, argv);
+
+    std::string funcResize;
+    for (auto &it : mapResize) {
+      if (it.second == resize) {
+        funcResize = it.first;
+        break;
+      }
     }
-    std::string funcSim; form("Methods for similarity diffVal/diffHisto/diffHistoZone", funcSim, "diffHisto", similarity_function_exist);
+
+    std::string funcSim;
+    for (auto &it : mapSimilarity) {
+      if (it.second == similarity) {
+        funcSim = it.first;
+        break;
+      }
+    }
+
+    std::string type = (channel == Channel::None) ? "RGB" : "HSV";
+    std::string strchannel = (channel == Channel::None) ? "RGB" : (channel == Channel::H) ? "H" : "S";
 
     // Creation de l'image principale
     Image image(pathI.c_str(), type);
@@ -99,19 +166,17 @@ int main() {
     getFilesInDirectory(set, pathD, type);
 
     // Autre variables
-    int R = std::stoi(row);
-    int C = std::stoi(col);
+    int R = row;
+    int C = col;
 
     ResizeManager rm(funcResize);
-    SimilarityManager sm(funcSim, channel);
+    SimilarityManager sm(funcSim, strchannel);
 
     // Application du filtre mosaique
     mosaic(image, R, C, set, rm, sm);
 
     // Sauvegarde de l'image
-    char buff[100];
-    sprintf(buff, "../../assets/out-%s-%s-%s-%dx%d.png", funcResize.c_str(), funcSim.c_str(), channel.c_str(), R, C);
-    image.save_png(buff);
+    image.save_png(pathOut.c_str());
 
     return 0;
 }
